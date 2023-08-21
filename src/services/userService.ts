@@ -22,8 +22,7 @@ export class UserService implements IUserService {
     @Inject('userModel')
     private userModel: mongoose.Model<IUser & mongoose.Document>,
     private mailer: MailerService,
-    @Inject('logger') private logger: Logger,
-    @Inject('dbService') private dbSevice,
+    @Inject('logger') private logger: Logger,    
     @EventDispatcher()
     private eventDispatcher: EventDispatcherInterface,
   ) {       
@@ -32,7 +31,7 @@ export class UserService implements IUserService {
   /* Get user from id*/
   public async getUser(id: string): Promise<IUser> {
     try {
-      const user = await this.userModel.findById(id).select('-password');
+      const user = await this.userModel.findById(id);
       return user;
     } catch (error) {
       throw createError(httpStatus.NOT_FOUND, `User ${id} doesn't exist`);
@@ -41,12 +40,10 @@ export class UserService implements IUserService {
 
   /* Login user */
 
-  public async loginUser(userInput: IUserInput) {
+  public async loginUser(userInput: IUserInput) {    
     try {
       // Get user from db
-      const userCheck =
-        (await this.userModel.findOne({ username: userInput.username })) ||
-        (await this.userModel.findOne({ email: userInput.email }));
+      const userCheck = (await this.userModel.findOne({ username: userInput.username }));      
       if (!userCheck) {
         this.logger.debug('Warning loginUser: InValid credentials');
         throw createError(httpStatus.FORBIDDEN, `Invalid  credentials`);
@@ -70,11 +67,11 @@ export class UserService implements IUserService {
           email: userCheck.email
         },
       };
-
+      
       const jwtSecret = config.jwtSecret;
       try {
         const token = jwt.sign(payload, jwtSecret, { expiresIn: '2h' });
-        this.eventDispatcher.dispatch(AppEvents.user.signIn, userCheck);
+        //this.eventDispatcher.dispatch(AppEvents.user.signIn, userCheck);
         return token;
       } catch (error) {
         throw createError(
@@ -91,10 +88,8 @@ export class UserService implements IUserService {
   /* Register user */
   public async registerUser(userInput: IUserInput) {
     const { username, email, password } = userInput;
-    try {
-      console.log('dbSevice', this.dbSevice);
+    try {      
       let user = await this.userModel.findOne({ username });
-
       if (user) {
         throw createError(
           httpStatus.CONFLICT,
@@ -108,15 +103,15 @@ export class UserService implements IUserService {
           `A user with email ${email} already exists`,
         );
       }
+      
       // Encrypting password
       const salt = await bcrypt.genSalt(10);
-      const encryptPass = await bcrypt.hash(password, salt);
+      const encryptPass = await bcrypt.hash(password, salt);      
       const userRecord = await this.userModel.create({
         username: username,
         email: email,
         password: encryptPass,
-      });
-
+      });      
       // Return password
       const payload = {
         user: {
@@ -130,16 +125,14 @@ export class UserService implements IUserService {
         this.eventDispatcher.dispatch(AppEvents.user.signUp, userRecord);
         this.logger.info('Success registerUser');
         return token;
-      } catch (error) {
-        console.log('..................', error);
+      } catch (error) {        
         this.logger.error(`Error registerUser: ${error.message}`);
         throw createError(
           httpStatus.FORBIDDEN,
           `RegisterUser: Error jsonwebtoken`,
         );
       }
-    } catch (error) {
-      console.log('..................', error);
+    } catch (error) {      
       this.logger.error(`Error registerUser: ${error.message}`);
       throw error;
     }

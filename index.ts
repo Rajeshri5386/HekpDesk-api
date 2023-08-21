@@ -1,3 +1,2 @@
-const emp = { name : 'Rajeshri', age :35 };
-emp.age = 40;
-console.log(emp.age);
+import { Server } from './src/server';
+(new Server()).startServer();

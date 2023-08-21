@@ -10,6 +10,7 @@ export const mongooseLoader = async () => {
       useUnifiedTopology: true,
       useCreateIndex: true,
     });
+    mongoose.set('debug', true);
     loggerDev.info('MongoDB has been connected');
     return mongoConnection.connection;
   } catch (err) {
