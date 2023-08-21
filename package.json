@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/server.ts"
+    "test-with-coverage": "nyc mocha -r ts-node/register src/test/*.spec.ts --timeout 1000 --exit --check-coverage=true",
+    "test": "mocha -r ts-node/register src/test/*.spec.ts --timeout 1000 --exit",
+    "start": "nodemon index.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.4.0",
     "bcrypt": "^5.0.0",
+    "chai-as-promised": "^7.1.1",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
     "cors": "^2.8.5",
@@ -25,11 +27,13 @@
     "http-proxy-middleware": "^1.0.6",
     "http-status-codes": "^2.1.4",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^10.2.0",
     "moment": "^2.29.0",
     "mongoose": "^5.10.6",
     "morgan": "^1.10.0",
     "normalize-url": "^5.3.0",
     "reflect-metadata": "^0.1.13",
+    "sinon": "^15.2.0",
     "typedi": "^0.8.0",
     "winston": "^3.3.3"
   },
@@ -53,8 +57,10 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "jasmine-core": "^5.1.0",
     "jest": "^26.4.2",
     "nodemon": "^2.0.4",
+    "nyc": "^15.1.0",
     "prettier": "^2.1.2",
     "ts-jest": "^26.4.0",
     "ts-node": "^9.0.0",

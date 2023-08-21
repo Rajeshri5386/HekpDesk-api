@@ -28,8 +28,6 @@
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-
-
     "forceConsistentCasingInFileNames": true,
     "outDir": "./build",
     "allowJs": true,
@@ -38,9 +36,9 @@
   },
   "include": [
     "src"
-  ],
+  ], 
   "exclude": [
     "node_modules",
-    "test"
+    "test"  
   ]
 }

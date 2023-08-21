@@ -17,8 +17,7 @@ requestRouter.get(
   //middleware.checkObjectId,
   handler(async (req: any, res: Response) => {
     // request.req always get from middleware
-    const requestService = Container.get(RequestService);
-    console.log("request parameter.............. ", req.params)
+    const requestService = Container.get(RequestService);    
     const request = await requestService.getRequests(req.params);
     res.json(request);
   }),
@@ -29,7 +28,7 @@ requestRouter.get(
   //middleware.requestAuth,
   handler(async (req: any, res: any) => {
     const requestService = Container.get(RequestService);
-    const requests = await requestService.getRequests(req.request.id);    
+    const requests = await requestService.getRequests(req.params.id);    
     return res.status(200).json(requests);
   }),
 );

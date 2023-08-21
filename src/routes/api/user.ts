@@ -14,21 +14,20 @@ const userRouter = Router();
 
 userRouter.get(
   '/',
-  //middleware.userAuth,
+  middleware.userAuth,
   //middleware.checkObjectId,
-  handler(async (req: RequestUser, res: Response) => {
-    // user.req always get from middleware
+  handler(async (req: any, res: any) => {  
+    // user.req always get from middleware    
     const userService = Container.get(UserService);
-    const user = await userService.getUser(req.user.id);
-    res.json(user);
+    const user = await userService.getUser(req.user.id);    
+    return res.status(200).json(user);
   }),
 );
 
 userRouter.get(
   '/me',
   middleware.userAuth,
-  handler(async (req: any, res: any) => {
-    console.log('inside route')
+  handler(async (req: any, res: any) => {    
     return res.status(200).json({ user: req.user , msg: 'hellow world'});
   }),
 );
@@ -46,8 +45,7 @@ userRouter.post(
         res.json({ token });  
       } catch (error) {
         console.log(error);
-      }
-      
+      }      
     },
   ),
 );
